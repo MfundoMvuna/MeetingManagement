@@ -1,0 +1,39 @@
+﻿@page "/create"
+@using MeetingManagement.Model;
+@using MeetingManagement.Data
+
+@model MeetingManagement.Pages.CreateModel
+@{
+}
+
+<h1>Create Meeting</h1>
+
+<form>
+    <div>
+        <label for="MeetingType">Type:</label>
+       @*  <select id="MeetingType" asp-for="Meeting.MeetingTypeID">@foreach (var type in MeetingType)
+            {
+                <option value="@type.MeetingTypeID">@type.Name</option>
+            }
+        </select> *@
+    </div>
+    <div>
+
+    </div>
+</form>
+
+@* @functions {
+    private Meeting Meeting { get; set; } = new Meeting();
+    private List<MeetingType> MeetingTypes { get; set; } = new List<MeetingType>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        MeetingTypes = await MeetingContext.MeetingTypes.ToListAsync();
+    }
+
+    async Task CreateMeeting()
+    {
+        await MeetingContext.Meetings.AddAsync(Meeting);
+        MeetingContext.SaveChangesAsync();
+    }
+} *@
