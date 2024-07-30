@@ -1,0 +1,31 @@
+﻿@page
+@model MeetingManagement.Pages.PreviousMeetingModel
+@{
+    ViewData["Title"] = "Previous Meetings";
+}
+
+<h2>Previous Meetings</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Meeting Type</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var meeting in Model.Meetings)
+        {
+            <tr>
+                <td>@meeting.Title</td>
+                <td>@meeting.MeetingType.MeetingTypeName</td>
+                <td>@meeting.Date</td>
+                <td>
+                    <a asp-page="/EditMeeting" asp-route-id="@meeting.MeetingID" class="btn btn-primary">View Meeting MInutes</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,26 +1,26 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MeetingManagement.Model
 {
     public class MeetingItems
     {
         [Key]
-        [Required]
         public int MeetingItemID { get; set; }
-
-        [Required]
         public int MeetingID { get; set; }
 
-        [Required]
-        public string? Description { get; set;}
+        [Required(ErrorMessage = "Please enter a comment.")]
+        public string Description { get; set; }
 
-        [Required]
-        public DateTime DueDate { get; set;}
+        [Required(ErrorMessage = "A date is required.")]
+        public DateTime DueDate { get; set; }
 
+        [Required(ErrorMessage = "Person Responsible is required.")]
         public string PersonResponsible { get; set; }
 
-        [Required]
-        public int MeetingItemStatusID { get; set;}
+        [ForeignKey("MeetingID")]
+        public Meeting Meeting { get; set; }
+        public ICollection<Status> Statuses { get; set; }
     }
 }

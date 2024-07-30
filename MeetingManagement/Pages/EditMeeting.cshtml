@@ -1,0 +1,64 @@
+﻿@page "{id:int}"
+@model MeetingManagement.Pages.EditMeetingModel
+
+@{
+    ViewData["Title"] = "Edit Meeting";
+}
+
+<h2>@Model.Meeting.MeetingType.MeetingTypeName @Model.Meeting.MeetingNumber - @Model.Meeting.Date.ToString("d MMMM yyyy")</h2>
+
+<form method="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Meeting Item</th>
+                <th>Comment</th>
+                <th>Status</th>
+                <th>Action By:</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Meeting.MeetingItems)
+            {
+                    <tr>
+                        <td>@Model.Meeting.Title</td>
+                        <td>@item.Description</td>
+                        <td>@item.Statuses.OrderByDescending(m => m.MeetingItemStatusID).FirstOrDefault()?.StatusDescription</td>
+                        <td>@item.Statuses.OrderByDescending(m => m.MeetingItemStatusID).FirstOrDefault()?.ResponsiblePerson</td>
+                        <td>
+                            <a href="javascript:void(0);" onclick="showEditMeetingItemPopup(@item.MeetingItemID)">Edit Item</a> |
+                            <a asp-page="/Status" asp-route-id="@item.MeetingItemID">Update Status</a> |
+                            <a asp-page="/ViewHistory" asp-route-id="@item.MeetingItemID">View History</a>
+                        </td>
+                    </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="form-group">
+        <input type="hidden" asp-for="Meeting.Title" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="hidden" asp-for="Meeting.Date" class="form-control" />
+    </div>
+
+    <br />
+    <a href="javascript:void(0);" class="btn btn-primary" onclick="showAddMeetingItemPopup(@Model.Meeting.MeetingID)">Add Item</a>
+    <a asp-page="/PreviousMeeting" class="btn btn-secondary">Cancel</a>
+</form>
+
+<script>
+    function showAddMeetingItemPopup(meetingId) {
+        // Placeholder function for adding a meeting item
+        // This will eventually open a pop-up form
+        // Populated Meeting Title, for tracking. Will be swapped for a, 'Meeting Item Title'
+        alert('Add Meeting Item for Meeting ID: ' + meetingId);
+    }
+
+    function showEditMeetingItemPopup(meetingItemId) {
+        // Placeholder function for editing a meeting item
+        // This will eventually open a pop-up form
+        alert('Edit Meeting Item with ID: ' + meetingItemId);
+    }
+</script>

@@ -1,0 +1,20 @@
+﻿@page "{id:int}"
+@model MeetingManagement.Pages.UpdateStatusModel
+
+<h2>Update Meeting Item Status</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Status">Status</label>
+        <select id="Status" asp-for="Status.StatusID" class="form-control" asp-items="Model.Statuses">
+            <option value="">Select a status</option>
+        </select>
+        <span asp-validation-for="Status.StatusID" class="text-danger"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

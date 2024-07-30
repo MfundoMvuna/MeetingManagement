@@ -1,39 +1,120 @@
-﻿@page "/create"
-@using MeetingManagement.Model;
-@using MeetingManagement.Data
-
+﻿@page
 @model MeetingManagement.Pages.CreateModel
 @{
+    ViewData["Title"] = "Create Meeting";
 }
 
 <h1>Create Meeting</h1>
 
-<form>
-    <div>
-        <label for="MeetingType">Type:</label>
-       @*  <select id="MeetingType" asp-for="Meeting.MeetingTypeID">@foreach (var type in MeetingType)
+<form method="post" id="createFrm">
+    <div class="form-group">
+        <label asp-for="Meeting.Title" class="control-label"></label>
+        <input asp-for="Meeting.Title" id="titleInput" class="form-control" />
+        <span asp-validation-for="Meeting.Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Meeting.Date" class="control-label"></label>
+        <input asp-for="Meeting.Date" type="datetime-local" id="dateInput" class="form-control" />
+        <span asp-validation-for="Meeting.Date" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Meeting.MeetingTypeID" class="control-label">Meeting Type</label>
+        <select id="meetingTypeDropdown" asp-for="Meeting.MeetingTypeID" asp-items="Model.MeetingTypes" class="form-control">
+            <option value="0" disabled>-- Select Meeting Type --</option>
+        </select>
+        <span asp-validation-for="Meeting.MeetingTypeID" class="text-danger"></span>
+    </div>
+    <br />
+    <div id="meeting-items-container" class="form-group">
+        @if (Model.PrevMeetingItems != null)
+        {
+            <h3>Previous Meeting Minutes</h3>
+            @foreach (var meetingItem in Model.PrevMeetingItems)
             {
-                <option value="@type.MeetingTypeID">@type.Name</option>
+                <div class="form-group">
+                    <input type="checkbox" name="selectedMeetingItems" value="@meetingItem.MeetingItemID" class="control-label" />
+                    <label>@meetingItem.Description</label>
+                </div>
             }
-        </select> *@
+        }
     </div>
-    <div>
-
-    </div>
+    <br />
+    <button id="create-meeting-button" type="submit" class="btn btn-primary">Create</button>
+    <a asp-page="/PreviousMeeting" class="btn btn-secondary">Cancel</a>
 </form>
 
-@* @functions {
-    private Meeting Meeting { get; set; } = new Meeting();
-    private List<MeetingType> MeetingTypes { get; set; } = new List<MeetingType>();
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $('#meetingTypeDropdown').change(function () {
+                var selectedMeetingTypeID = $(this).val();
+                var selectedMeetingID = @Model.LastMeetingID;
 
-    protected override async Task OnInitializedAsync()
-    {
-        MeetingTypes = await MeetingContext.MeetingTypes.ToListAsync();
-    }
+                fetch(`?handler=GetMeetingItems&meetingTypeID=${selectedMeetingTypeID}&meetingID=${selectedMeetingID}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        var container = $('#meeting-items-container');
+                        container.empty();
+                        
+                        if (Array.isArray(data)) {
+                            data.forEach(function (item) {
+                                container.append(`
+                                        <div class="form-group">
+                                                <label class="control-label lbl-chk">Attach : </label>
+                                            <input type="checkbox" name="selectedMeetingItems" value="${item.meetingItemID}" class="control-label" />
+                                                    <label class="control-label">${item.description}</label>
+                                        </div>
+                                    `);
+                            });
+                        }
+                        else {
+                            console.log('Expected data to be an array ', data);
+                        }  
+                    })
+                    .catch(error => {
+                        console.error('Error: ', error);
+                    });
+            });
 
-    async Task CreateMeeting()
-    {
-        await MeetingContext.Meetings.AddAsync(Meeting);
-        MeetingContext.SaveChangesAsync();
-    }
-} *@
+            $('#create-meeting-button').click(function () {
+                var selectedMeetingItems = [];
+                $('input[name="selectedMeetingItems"]:checked').each(function () {
+                    selectedMeetingItems.push($(this).val());
+                });
+
+                $('input[name="SelectedMeetingItems"]').val(selectedMeetingItems.join(','));
+            });
+
+            $('#createFrm').validate({
+                rules: {
+                    'Meeting.Title': {
+                        required: true,
+                        minlength: 5
+                    },
+                    'Meeting.Date': {
+                        required: true,
+                        date: true
+                    },
+                    'Meeting.MeetingTypeID': {
+                        required: true
+                    }
+                },
+                messages: {
+                    'Meeting.Title': "Please enter a title (at least 5 characters)",
+                    'Meeting.Date': "Please select a valid date",
+                    'Meeting.MeetingTypeID': "Please select a Type"
+                },
+                errorELement: 'span',
+                errorPlacement: function (error, element) {
+                    error.css('color', '#03A9F4');
+                    error.insertAfter(element);
+                }
+            });
+        })
+    </script>
+}

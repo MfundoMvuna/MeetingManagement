@@ -1,18 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using MeetingManagement.Data;
+using MeetingManagement.Model;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MeetingManagement.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly MeetingContext _context;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(MeetingContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public void OnGet()
+        public IList<Meeting> Meetings { get; set; }
+        public ICollection<MeetingItems> MeetingItems { get; set; }
+        public async Task OnGetAsync()
         {
 
         }

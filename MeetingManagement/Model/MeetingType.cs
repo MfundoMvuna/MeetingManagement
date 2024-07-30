@@ -8,7 +8,8 @@ namespace MeetingManagement.Model
         [Key]
         [Required]
         public int MeetingTypeID { get; set; }
-
         public string? MeetingTypeName { get; set; }
+
+        public ICollection<Meeting> Meetings { get; set; }
     }
 }

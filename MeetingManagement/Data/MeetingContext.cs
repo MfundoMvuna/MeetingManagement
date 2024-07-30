@@ -1,49 +1,63 @@
 ﻿using MeetingManagement.Model;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MeetingManagement.Data
 {
     public class MeetingContext : DbContext
     {
         public MeetingContext(DbContextOptions<MeetingContext> options) : base(options)
-        { 
-            
+        {
         }
 
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<MeetingType> MeetingTypes { get; set; }
-        public DbSet<MeetingItems> MeetingItem { get; set; }
-        public DbSet<Status> MeetingItemStatuses { get; set; }
-
+        public DbSet<MeetingItems> MeetingItems { get; set; }
+        public DbSet<Status> Statuses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            // Table configurations
             modelBuilder.Entity<MeetingType>().ToTable("MeetingType");
             modelBuilder.Entity<Meeting>().ToTable("Meeting");
             modelBuilder.Entity<MeetingItems>().ToTable("MeetingItems");
             modelBuilder.Entity<Status>().ToTable("Status");
 
-            // Define relationships and constraints
+            // Relationships configurations
+            modelBuilder.Entity<MeetingItems>()
+                .HasMany(mi => mi.Statuses)
+                .WithOne(s => s.MeetingItem)
+                .HasForeignKey(s => s.MeetingItemID)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Meeting>()
-                .HasOne(m => m.MeetingType)
-                .WithMany()
-                .HasForeignKey(m => m.MeetingTypeID);
+                .HasMany(m => m.MeetingItems)
+                .WithOne(mi => mi.Meeting)
+                .HasForeignKey(mi => mi.MeetingID);
 
             modelBuilder.Entity<Status>()
-                .HasOne(mis => mis.MeetingItem)
-                .WithMany()
-                .HasForeignKey(mis => mis.MeetingItemID);
+                .HasOne(m => m.MeetingItem)
+                .WithMany(mi => mi.Statuses)
+                .HasForeignKey(ms => ms.MeetingItemID);
 
-            modelBuilder.Entity<Status>()
-                .HasOne(mis => mis.Meeting)
-                .WithMany()
-                .HasForeignKey(mis => mis.MeetingID);
+
+            // Ensure nullable fields are properly handled
+            modelBuilder.Entity<MeetingItems>()
+                .Property(mi => mi.Description)
+                .IsRequired();
+
+            modelBuilder.Entity<MeetingItems>()
+                .Property(mi => mi.PersonResponsible)
+                .IsRequired();
+
+            modelBuilder.Entity<Meeting>()
+                .Property(m => m.Title)
+                .IsRequired();
+
+            modelBuilder.Entity<Meeting>()
+                .Property(m => m.MeetingNumber)
+                .IsRequired();
         }
     }
 }
