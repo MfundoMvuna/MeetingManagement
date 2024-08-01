@@ -21,7 +21,7 @@
             <tr>
                 <td>@meeting.Title</td>
                 <td>@meeting.MeetingType.MeetingTypeName</td>
-                <td>@meeting.Date</td>
+                <td>@meeting.Date.ToString("d MMMM yyyy")</td>
                 <td>
                     <a asp-page="/EditMeeting" asp-route-id="@meeting.MeetingID" class="btn btn-primary">View Meeting MInutes</a>
                 </td>

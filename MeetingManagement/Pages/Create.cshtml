@@ -2,6 +2,7 @@
 @model MeetingManagement.Pages.CreateModel
 @{
     ViewData["Title"] = "Create Meeting";
+    <link rel="stylesheet" href="~/css/switch_checkbox.css" />
 }
 
 <h1>Create Meeting</h1>
@@ -65,9 +66,9 @@
                             data.forEach(function (item) {
                                 container.append(`
                                         <div class="form-group">
-                                                <label class="control-label lbl-chk">Attach : </label>
-                                            <input type="checkbox" name="selectedMeetingItems" value="${item.meetingItemID}" class="control-label" />
-                                                    <label class="control-label">${item.description}</label>
+                                                <label class="control-label lbl-chk">Attach : 
+                                            <input type="checkbox" name="selectedMeetingItems" value="${item.meetingItemID}" class="control-label custom-control" />
+                                                    ${item.description}</label>
                                         </div>
                                     `);
                             });

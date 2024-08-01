@@ -1,0 +1,36 @@
+﻿.custom-control {
+    appearance: none;
+    position: relative;
+    display: inline-block;
+    background: lightgrey;
+    height: 1.65rem;
+    width: 2.75rem;
+    vertical-align: middle;
+    border-radius: 2rem;
+    box-shadow: 0px 1px 3px #2003 inset;
+    transition: 0.25s linear background;
+}
+
+    .custom-control::before {
+        content: '';
+        display: block;
+        width: 1.25rem;
+        height: 1.25rem;
+        background: #fff;
+        border-radius: 1.2rem;
+        position: absolute;
+        top: 0.2rem;
+        left: 0.2rem;
+        box-shadow: 0px 1px 3px #2003;
+        transition: 0.25s linear transform;
+        transform: translateX(0rem);
+    }
+
+    .custom-control:checked {
+        background: #577fbb;
+        color: white;
+    }
+
+        .custom-control:checked::before {
+            transform: translateX(1rem);
+        }
